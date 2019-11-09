@@ -116,7 +116,7 @@ const Dashboard = () => {
           <Map
             mapcenter={mylocation}
             locations={locations}
-            googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyBDuv6fcvIgFevaKa67iRgPtwlAELxm280&v=3.exp&libraries=geometry,drawing,places"
+            googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyD3dAC_Avi4Qljvqfd9mBT7sNJorHjEZ5U&v=3.exp&libraries=geometry,drawing,places"
             loadingElement={<div style={{ height: `480px` }} />}
             containerElement={<div style={{ height: `480px` }} />}
             mapElement={<div style={{ height: `480px` }} />}
