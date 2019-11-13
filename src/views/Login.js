@@ -62,6 +62,7 @@ const Login = props => {
 
   const handleSubmit = e => {
     e.preventDefault();
+    // TODO FIREBASE : ERROR si on indique pas l'utilisateur dans la datatable /users comme admin
     dispatch(signIn(email, password));
   };
 
