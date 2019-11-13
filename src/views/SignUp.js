@@ -6,11 +6,11 @@ import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import logo from "../assets/axa-logo.png";
+import logo from "../assets/logo-sosam.png";
 import { useSelector, useDispatch } from "react-redux";
 import AlertDialog from "../components/AlertDialog";
 
-import { signIn, clearLoginError } from "../actions/authactions";
+import { signUp, clearLoginError } from "../actions/authactions";
 
 const useStyles = makeStyles(theme => ({
   "@global": {
@@ -39,18 +39,34 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const Login = props => {
+const SignUp = props => {
   const auth = useSelector(state => state.auth);
   const dispatch = useDispatch();
   const classes = useStyles();
+  const [fname, setFname] = useState("");
+  const [lname, setLname] = useState("");
+  const [mobile, setMobile] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [refferalId, setRefferalId] = useState("");
 
   useEffect(() => {
     if (auth.info) {
       props.history.push("/");
     }
   });
+
+  const handleFnameChange = e => {
+    setFname(e.target.value);
+  };
+
+  const handleLnameChange = e => {
+    setLname(e.target.value);
+  };
+
+  const handleMobileChange = e => {
+    setMobile(e.target.value);
+  };
 
   const handleEmailChange = e => {
     setEmail(e.target.value);
@@ -60,9 +76,13 @@ const Login = props => {
     setPassword(e.target.value);
   };
 
+  const handleRefferalIdChange = e => {
+    setRefferalId(e.target.value);
+  };
+
   const handleSubmit = e => {
     e.preventDefault();
-    dispatch(signIn(email, password));
+    dispatch(signUp(fname, lname, mobile, email, password, refferalId));
   };
 
   const handleClose = () => {
@@ -79,9 +99,49 @@ const Login = props => {
           <img src={logo} alt="Logo" />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Sign in
+          Inscription
         </Typography>
         <form className={classes.form} onSubmit={handleSubmit}>
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="fname"
+            label="First Name"
+            name="fname"
+            autoComplete="fname"
+            onChange={handleFnameChange}
+            value={fname}
+            autoFocus
+          />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="lname"
+            label="Last Name"
+            name="lname"
+            autoComplete="lname"
+            onChange={handleLnameChange}
+            value={lname}
+            autoFocus
+          />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="mobile"
+            label="Mobile (10 digit)"
+            type="number"
+            name="mobile"
+            autoComplete="mobile"
+            onChange={handleMobileChange}
+            value={mobile}
+            autoFocus
+          />
           <TextField
             variant="outlined"
             margin="normal"
@@ -108,6 +168,18 @@ const Login = props => {
             onChange={handlePasswordChange}
             autoComplete="current-password"
           />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            name="refferalId"
+            label="Referral Id (Optional)"
+            id="refferalId"
+            value={refferalId}
+            onChange={handleRefferalIdChange}
+            autoComplete="current-refferalId"
+          />
           <Button
             type="submit"
             fullWidth
@@ -115,15 +187,15 @@ const Login = props => {
             color="primary"
             className={classes.submit}
           >
-            Sign In
+            S'inscrire
           </Button>
         </form>
       </div>
       <AlertDialog open={auth.error.flag} onClose={handleClose}>
-        Sign In Error. Please check Email and Password.
+        Sign Up Error. Please check Email and Password.
       </AlertDialog>
     </Container>
   );
 };
 
-export default Login;
+export default SignUp;
