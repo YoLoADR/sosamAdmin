@@ -82,8 +82,6 @@ const SignUp = props => {
 
   const handleSubmit = e => {
     e.preventDefault();
-    // TODO FIREBASE : fname,
-    // dispatch(signIn(email, password));
     dispatch(signUp(fname, lname, mobile, email, password, refferalId));
   };
 

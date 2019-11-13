@@ -163,6 +163,7 @@ export const signUp = (
               displayName: regData.firstName + " " + regData.lastName
             })
             .then(() => {
+              // TODO FIREBASE : ERROR + ne veut pas save user dans la db /users
               userRef
                 .child(authRef.currentUser.uid)
                 .set(regData)

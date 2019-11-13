@@ -11,6 +11,7 @@ import Bookings from "./views/Bookings";
 import Promos from "./views/Promos";
 import Users from "./views/Users";
 import Referral from "./views/Referral";
+import Article from "./views/Article";
 import { fetchUser } from "./actions/authactions";
 import AuthLoading from "./components/AuthLoading";
 
@@ -27,6 +28,7 @@ function App() {
             <ProtectedRoute exact component={Promos} path="/promos" />
             <ProtectedRoute exact component={Users} path="/drivers" />
             <ProtectedRoute exact component={Referral} path="/referral" />
+            <Route component={Article} path="/Article" />
             <Route component={SignUp} path="/signUp" />
             <Route component={Login} path="/login" />
           </Switch>

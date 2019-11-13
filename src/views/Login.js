@@ -6,7 +6,7 @@ import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import logo from "../assets/logo-sosam.png";
+import logo from "../assets/axa-logo.png";
 import { useSelector, useDispatch } from "react-redux";
 import AlertDialog from "../components/AlertDialog";
 
