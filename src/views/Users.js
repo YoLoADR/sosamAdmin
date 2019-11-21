@@ -31,7 +31,7 @@ export default function Users() {
 
   const columns = [
     { title: "First Name", field: "firstName" },
-    { title: "First Name", field: "lastName" },
+    { title: "Last Name", field: "lastName" },
     {
       title: "User Type",
       field: "usertype",

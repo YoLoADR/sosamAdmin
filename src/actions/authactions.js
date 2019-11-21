@@ -164,7 +164,20 @@ export const signUp = (
             })
             .then(() => {
               // TODO FIREBASE : ERROR + ne veut pas save user dans la db /users
-              userRef
+              // userRef
+              //   .child(authRef.currentUser.uid)
+              //   .set(regData)
+              //   .then(() => {
+              //     authRef
+              //       .signInWithEmailAndPassword(email, password)
+              //       .then(res => {
+              //         this.props.navigation.navigate("Root");
+              //       })
+              //       .catch(res => {
+              //         alert(res.message);
+              //       });
+              //   });
+              authRef
                 .child(authRef.currentUser.uid)
                 .set(regData)
                 .then(() => {
