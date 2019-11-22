@@ -1,4 +1,17 @@
 import React, { Component } from "react";
+import { Mutation } from "react-apollo";
+import gql from "graphql-tag";
+
+const POST_MUTATION = gql`
+  mutation PostMutation($description: String!, $url: String!) {
+    post(description: $description, url: $url) {
+      id
+      createdAt
+      url
+      description
+    }
+  }
+`;
 
 class CreateLink extends Component {
   state = {
@@ -26,10 +39,20 @@ class CreateLink extends Component {
             placeholder="The URL for the link"
           />
         </div>
-        <button onClick={`... you'll implement this 🔜`}>Submit</button>
+
+        <Mutation
+          mutation={POST_MUTATION}
+          variables={{ description, url }}
+          //(1)
+          onCompleted={() => this.props.history.push("/")}
+        >
+          {postMutation => <button onClick={postMutation}>Submit</button>}
+        </Mutation>
       </div>
     );
   }
 }
 
 export default CreateLink;
+
+// (1) Pour résumer cette section, vous devez implémenter une redirection automatique duCreateLink composant vers le LinkListcomposant après une mutation.bibliothèque

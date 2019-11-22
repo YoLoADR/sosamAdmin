@@ -13,6 +13,8 @@ import Users from "./views/Users";
 import Referral from "./views/Referral";
 import Article from "./views/Article";
 import LinkList from "./views/LinkList";
+import CreateLink from "./views/CreateLink";
+import Header from "./views/Header";
 import { fetchUser } from "./actions/authactions";
 import AuthLoading from "./components/AuthLoading";
 
@@ -22,6 +24,7 @@ function App() {
     <Provider store={store}>
       <AuthLoading>
         <Router>
+          <Header />
           <Switch>
             <ProtectedRoute exact component={Dashboard} path="/" />
             <ProtectedRoute exact component={CarTypes} path="/cartypes" />
@@ -30,9 +33,10 @@ function App() {
             <ProtectedRoute exact component={Users} path="/drivers" />
             <ProtectedRoute exact component={Referral} path="/referral" />
             <Route component={Article} path="/Article" />
-            <Route component={LinkList} path="/LinkList" />
             <Route component={SignUp} path="/signUp" />
             <Route component={Login} path="/login" />
+            <Route exact path="/link-list" component={LinkList} />
+            <Route exact path="/create" component={CreateLink} />
           </Switch>
         </Router>
       </AuthLoading>
