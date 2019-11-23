@@ -17,6 +17,7 @@ import CreateLink from "./views/CreateLink";
 import Header from "./views/Header";
 import { fetchUser } from "./actions/authactions";
 import AuthLoading from "./components/AuthLoading";
+import Connexion from "./views/Connexion";
 
 function App() {
   store.dispatch(fetchUser());
@@ -37,6 +38,7 @@ function App() {
             <Route component={Login} path="/login" />
             <Route exact path="/link-list" component={LinkList} />
             <Route exact path="/create" component={CreateLink} />
+            <Route exact path="/connexion" component={Connexion} />
           </Switch>
         </Router>
       </AuthLoading>
