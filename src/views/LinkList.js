@@ -7,11 +7,11 @@ import gql from "graphql-tag";
 
 const FEED_QUERY = gql`
   {
-    feed {
-      links {
-        id
+    getUsers(orderBy: createdAt_ASC) {
+      users {
+        name
+        email
         createdAt
-        url
         description
       }
     }
@@ -39,7 +39,7 @@ class LinkList extends Component {
           if (loading) return <div>Fetching</div>;
           if (error) return <div>Error</div>;
 
-          const linksToRender = data.feed.links;
+          const linksToRender = data.getUsers.users;
           return (
             <div>
               {linksToRender.map(link => (
