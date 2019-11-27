@@ -14,6 +14,8 @@ import {
   CLEAR_LOGIN_ERROR
 } from "./types";
 import * as firebase from "firebase";
+import { AUTH_TOKEN } from "../config/dev";
+import { Route, Redirect } from "react-router-dom";
 
 export const fetchUser = () => dispatch => {
   dispatch({
@@ -89,17 +91,7 @@ export const clearLoginError = () => dispatch => {
 };
 
 export const signOut = () => dispatch => {
-  authRef
-    .signOut()
-    .then(() => {
-      dispatch({
-        type: USER_SIGN_OUT,
-        payload: null
-      });
-    })
-    .catch(error => {
-      //console.log(error);
-    });
+  localStorage.removeItem(AUTH_TOKEN);
 };
 
 export const signUp = (
