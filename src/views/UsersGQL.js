@@ -4,10 +4,24 @@ import MaterialTable from "material-table";
 //The useSelector is approximately equivalent to the mapStateToProps
 import { useSelector, useDispatch } from "react-redux";
 import CircularLoading from "../components/CircularLoading";
-
 import { editUser } from "../actions/usersactions";
+import { Query } from "react-apollo";
+import gql from "graphql-tag";
 
-export default function Users() {
+const FEED_QUERY = gql`
+  {
+    getUsers(orderBy: createdAt_ASC) {
+      users {
+        name
+        email
+        createdAt
+        description
+      }
+    }
+  }
+`;
+
+export default function UsersGQL() {
   const [data, setData] = useState([]);
   const [cars, setCars] = useState({});
   const usersdata = useSelector(state => state.usersdata);
@@ -16,7 +30,6 @@ export default function Users() {
 
   useEffect(() => {
     if (usersdata.users) {
-      console.log("usersdata", usersdata);
       setData(usersdata.users);
     }
   }, [usersdata.users]);
@@ -30,7 +43,7 @@ export default function Users() {
   }, [cartypes.cars]);
 
   const columns = [
-    { title: "First Name", field: "firstName" },
+    { title: "First Name", field: "name" },
     { title: "First Name", field: "lastName" },
     {
       title: "User Type",
@@ -93,42 +106,21 @@ export default function Users() {
     return obj;
   };
 
-  return usersdata.loading ? (
-    <CircularLoading />
-  ) : (
-    <MaterialTable
-      title="All Users"
-      columns={columns}
-      data={data}
-      editable={{
-        onRowAdd: newData =>
-          new Promise(resolve => {
-            setTimeout(() => {
-              resolve();
-              const tblData = data;
-              tblData.push(newData);
-              dispatch(editUser(removeExtraKeys(tblData), "Add"));
-            }, 600);
-          }),
-        onRowUpdate: (newData, oldData) =>
-          new Promise(resolve => {
-            setTimeout(() => {
-              resolve();
-              const tblData = data;
-              tblData[tblData.indexOf(oldData)] = newData;
-              dispatch(editUser(removeExtraKeys(tblData), "Update"));
-            }, 600);
-          })
-        /*  onRowDelete: oldData =>
-          new Promise(resolve => {
-            setTimeout(() => {
-              resolve();
-              const tblData = data;
-              tblData.splice(tblData.indexOf(oldData), 1);
-              dispatch(editUser(removeExtraKeys(tblData),"Delete"));
-            }, 600);
-          }), */
+  return (
+    <Query query={FEED_QUERY}>
+      {({ loading, error, data }) => {
+        if (loading) return <CircularLoading />;
+        if (error) return <div>Error</div>;
+
+        const linksToRender = data.getUsers.users;
+        return (
+          <MaterialTable
+            title="All Users"
+            columns={columns}
+            data={linksToRender}
+          />
+        );
       }}
-    />
+    </Query>
   );
 }

@@ -17,13 +17,16 @@ import ExitIcon from "@material-ui/icons/ExitToApp";
 import OfferIcon from "@material-ui/icons/LocalOffer";
 import PeopleIcon from "@material-ui/icons/People";
 import MoneyIcon from "@material-ui/icons/AttachMoney";
-
+import { useHistory } from "react-router-dom";
+import { AUTH_TOKEN } from "../config/dev";
 import { signOut } from "../actions/authactions";
 
 function AppMenu() {
   const dispatch = useDispatch();
+  let history = useHistory();
   const LogOut = () => {
-    dispatch(signOut());
+    localStorage.removeItem(AUTH_TOKEN);
+    history.push("/");
   };
 
   return (
