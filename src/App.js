@@ -12,7 +12,6 @@ import Promos from "./views/Promos";
 import Users from "./views/Users";
 import Referral from "./views/Referral";
 import Article from "./views/Article";
-import LinkList from "./views/LinkList";
 import CreateLink from "./views/CreateLink";
 import Header from "./views/Header";
 import { fetchUser } from "./actions/authactions";
@@ -38,7 +37,6 @@ function App() {
             <Route component={Article} path="/Article" />
             <Route component={SignUp} path="/signUp" />
             <Route component={Login} path="/login" />
-            <Route exact path="/link-list" component={LinkList} />
             <Route exact path="/create" component={CreateLink} />
             <Route exact path="/connexion" component={Connexion} />
             <Route exact path="/inscription" component={Inscription} />
