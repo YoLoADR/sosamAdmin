@@ -8,7 +8,7 @@ import { editUser } from "../actions/usersactions";
 import { Query } from "react-apollo";
 import gql from "graphql-tag";
 
-const FEED_QUERY = gql`
+const USER_QUERY = gql`
   {
     getUsers(orderBy: createdAt_ASC) {
       users {
@@ -106,7 +106,7 @@ export default function Users() {
   ];
 
   return (
-    <Query query={FEED_QUERY}>
+    <Query query={USER_QUERY}>
       {({ loading, error, data }) => {
         if (loading) return <CircularLoading />;
         if (error) return <div>Error</div>;
