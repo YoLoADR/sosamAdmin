@@ -12,20 +12,20 @@ import Promos from "./views/Promos";
 import Users from "./views/Users";
 import Referral from "./views/Referral";
 import Article from "./views/Article";
-import LinkList from "./views/LinkList";
 import CreateLink from "./views/CreateLink";
 import Header from "./views/Header";
 import { fetchUser } from "./actions/authactions";
 import AuthLoading from "./components/AuthLoading";
 import Connexion from "./views/Connexion";
+import UsersGQL from "./views/UsersGQL";
+import Inscription from "./views/Inscription";
 
 function App() {
-  store.dispatch(fetchUser());
+  //store.dispatch(fetchUser());
   return (
     <Provider store={store}>
       <AuthLoading>
         <Router>
-          <Header />
           <Switch>
             <ProtectedRoute exact component={Dashboard} path="/" />
             <ProtectedRoute exact component={CarTypes} path="/cartypes" />
@@ -33,12 +33,13 @@ function App() {
             <ProtectedRoute exact component={Promos} path="/promos" />
             <ProtectedRoute exact component={Users} path="/drivers" />
             <ProtectedRoute exact component={Referral} path="/referral" />
+            <ProtectedRoute exact component={UsersGQL} path="/users" />
             <Route component={Article} path="/Article" />
             <Route component={SignUp} path="/signUp" />
             <Route component={Login} path="/login" />
-            <Route exact path="/link-list" component={LinkList} />
             <Route exact path="/create" component={CreateLink} />
             <Route exact path="/connexion" component={Connexion} />
+            <Route exact path="/inscription" component={Inscription} />
           </Switch>
         </Router>
       </AuthLoading>

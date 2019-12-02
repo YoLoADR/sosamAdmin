@@ -1,8 +1,8 @@
 import React, { Component, useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
-import { makeStyles } from "@material-ui/core/styles";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
+import { useHistory } from "react-router-dom";
+import { makeStyles } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
@@ -13,16 +13,19 @@ import { Mutation } from "react-apollo";
 import gql from "graphql-tag";
 
 // (5)
-const LOGIN_MUTATION = gql`
-  mutation LoginMutation($email: String!, $password: String!) {
-    login(email: $email, password: $password) {
+const SIGNUP_MUTATION = gql`
+  mutation SignupMutation($email: String!, $password: String!, $name: String!) {
+    signup(email: $email, password: $password, name: $name) {
       token
     }
   }
 `;
 
-const Connexion = props => {
+const authToken = localStorage.getItem(AUTH_TOKEN);
+
+const Inscription = props => {
   const classes = useStyles();
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const authToken = localStorage.getItem(AUTH_TOKEN);
@@ -35,6 +38,10 @@ const Connexion = props => {
     }
   });
 
+  const handleNameChange = e => {
+    setName(e.target.value);
+  };
+
   const handleEmailChange = e => {
     setEmail(e.target.value);
   };
@@ -44,7 +51,7 @@ const Connexion = props => {
   };
 
   const _confirm = async data => {
-    const { token } = data.login;
+    const { token } = data.signup;
     _saveUserData(token);
   };
 
@@ -61,9 +68,22 @@ const Connexion = props => {
           <img src={logo} alt="Logo" />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Sign in
+          Inscription
         </Typography>
         <form className={classes.form}>
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="name"
+            label="Your name"
+            name="name"
+            autoComplete="emnameail"
+            onChange={handleNameChange}
+            value={name}
+            autoFocus
+          />
           <TextField
             variant="outlined"
             margin="normal"
@@ -91,8 +111,8 @@ const Connexion = props => {
             autoComplete="current-password"
           />
           <Mutation
-            mutation={LOGIN_MUTATION}
-            variables={{ email, password }}
+            mutation={SIGNUP_MUTATION}
+            variables={{ email, password, name }}
             onCompleted={data => _confirm(data)}
           >
             {mutation => (
@@ -103,18 +123,19 @@ const Connexion = props => {
                 color="primary"
                 className={classes.submit}
               >
-                Login
+                Créer un compte
               </Button>
             )}
           </Mutation>
+
           <Button
             fullWidth
             variant="contained"
             color="secondary"
             className={classes.submit}
-            onClick={() => history.push(`/inscription`)}
+            onClick={() => history.push(`/connexion`)}
           >
-            Need to create an account ?
+            Already have an account?
           </Button>
         </form>
       </div>
@@ -122,7 +143,7 @@ const Connexion = props => {
   );
 };
 
-export default Connexion;
+export default Inscription;
 
 const useStyles = makeStyles(theme => ({
   "@global": {
@@ -161,66 +182,3 @@ const useStyles = makeStyles(theme => ({
 // (5) Les deux mutations ressemblent beaucoup aux mutations que vous avez déjà vues auparavant. Ils prennent un certain nombre d'arguments et renvoient le tokenque vous pouvez attacher aux demandes ultérieures d'authentification de l'utilisateur (c'est-à-dire qu'ils indiquent qu'une demande est faite pour le compte de cet utilisateur). Vous allez apprendre à le faire.
 
 // (6) Si l'utilisateur veut simplement se connecter, vous appelez le loginMutation, sinon vous utilisez le signupMutationet la mutation sera déclenchée sur l' onClickévénement de la div . Les mutations GraphQL reçoivent les valeurs email, passwordet les nameétats sous la forme de paramètres passés sur l' variablesaccessoire. Enfin, lorsque la mutation est terminée, nous appelons la _confirmfonction, en passant datacomme argument le résultat de la mutation.
-
-// class Connexion extends Component {
-//   state = {
-//     login: true,
-//     email: "",
-//     password: "",
-//     name: ""
-//   };
-
-//   render() {
-//     const { login, email, password, name } = this.state;
-//     const classes = useStyles();
-//     return (
-//       <div>
-//         <h4 className="mv3">Login</h4>
-//         <div className="flex flex-column">
-//           <input
-//             value={email}
-//             onChange={e => this.setState({ email: e.target.value })}
-//             type="text"
-//             placeholder="Your email address"
-//           />
-//           <input
-//             value={password}
-//             onChange={e => this.setState({ password: e.target.value })}
-//             type="password"
-//             placeholder="Choose a safe password"
-//           />
-//         </div>
-//         <div className="flex mt3">
-//           {/* (6) */}
-//           <Mutation
-//             mutation={LOGIN_MUTATION}
-//             variables={{ email, password, name }}
-//             onCompleted={data => this._confirm(data)}
-//           >
-//             {mutation => (
-//               <div className="pointer mr2 button" onClick={mutation}>
-//                 Login
-//               </div>
-//             )}
-//           </Mutation>
-//           <div
-//             className="pointer button"
-//             onClick={() => this.setState({ login: !login })}
-//           >
-//             Need to create an account
-//           </div>
-//         </div>
-//       </div>
-//     );
-//   }
-
-//   _confirm = async data => {
-//     const { token } = data.login;
-//     this._saveUserData(token);
-//   };
-
-//   _saveUserData = token => {
-//     localStorage.setItem(AUTH_TOKEN, token);
-//     this.props.history.push(`/users`);
-//   };
-// }
