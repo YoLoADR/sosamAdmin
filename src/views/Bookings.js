@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
 import MaterialTable from "material-table";
 import CircularLoading from "../components/CircularLoading";
 //import { useSelector,useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { Query } from "react-apollo";
 import gql from "graphql-tag";
+import { AUTH_TOKEN } from "../config/dev"; // (4)
+import { Mutation } from "react-apollo";
+import { useApolloClient, useMutation } from "@apollo/react-hooks";
 
 /*
 import {
@@ -42,6 +46,15 @@ const BOOKING_QUERY = gql`
   }
 `;
 
+const POST_BOOKING = gql`
+  mutation PostBooking($carType: String!, $customer_name: String!) {
+    postUser(carType: $carType, customer_name: $customer_name) {
+      url
+      description
+    }
+  }
+`;
+
 export default function Bookings() {
   const columns = [
     { title: "Booking Date", field: "tripdate" },
@@ -61,6 +74,18 @@ export default function Bookings() {
 
   const [data, setData] = useState([]);
   const bookingdata = useSelector(state => state.bookingdata);
+
+  const history = useHistory();
+  const _confirm = async data => {
+    console.log("*******TRIGGER");
+    const { token } = data.login;
+    _saveUserData(token);
+  };
+
+  const _saveUserData = token => {
+    localStorage.setItem(AUTH_TOKEN, token);
+    history.push(`/users`);
+  };
   //const dispatch = useDispatch();
 
   useEffect(() => {
@@ -89,51 +114,35 @@ export default function Bookings() {
 
         const bookings = data.getBookings.bookings;
         return (
-          <MaterialTable title="Bookings" columns={columns} data={bookings} />
+          <MaterialTable
+            title="Bookings"
+            columns={columns}
+            data={bookings}
+            editable={{
+              // *********************** TEST PART
+              onRowAdd: newData =>
+                new Promise(resolve => {
+                  setTimeout(() => {}, 600);
+                }),
+
+              onRowUpdate: (newData, oldData) => {
+                let carType = newData.carType;
+                let customer_name = newData.customer_name;
+                return (
+                  <Mutation
+                    mutation={POST_BOOKING}
+                    variables={{ carType, customer_name }}
+                    onCompleted={data => _confirm(data)}
+                  >
+                    {mutation => _confirm()}
+                  </Mutation>
+                );
+              }
+              // *********************** END TEST PART
+            }}
+          />
         );
       }}
     </Query>
   );
 }
-
-// return bookingdata.loading ? (
-//   <CircularLoading />
-// ) : (
-//   <MaterialTable
-//     title="Bookings"
-//     columns={columns}
-//     data={data}
-//     editable={
-//       {
-//         /* You can Open these below to enable Add / Edit/ Delete */
-//         /*     onRowAdd: newData =>
-//         new Promise(resolve => {
-//           setTimeout(() => {
-//             resolve();
-//             const tblData = data;
-//             tblData.push(newData);
-//             dispatch(editBooking(removeExtraKeys(tblData),"Add"));
-//           }, 600);
-//         }),
-//       onRowUpdate: (newData, oldData) =>
-//         new Promise(resolve => {
-//           setTimeout(() => {
-//             resolve();
-//             const tblData = data;
-//             tblData[tblData.indexOf(oldData)] = newData;
-//             dispatch(editBooking(removeExtraKeys(tblData),"Update"));
-//           }, 600);
-//         }),
-//       onRowDelete: oldData =>
-//         new Promise(resolve => {
-//           setTimeout(() => {
-//             resolve();
-//             const tblData = data;
-//             tblData.splice(tblData.indexOf(oldData), 1);
-//             dispatch(editBooking(removeExtraKeys(tblData),"Delete"));
-//           }, 600);
-//         }), */
-//       }
-//     }
-//   />
-// );
