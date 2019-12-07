@@ -48,9 +48,21 @@ const BOOKING_QUERY = gql`
 
 const POST_BOOKING = gql`
   mutation PostBooking($carType: String!, $customer_name: String!) {
-    postUser(carType: $carType, customer_name: $customer_name) {
-      url
-      description
+    postBooking(
+      carType: $carType
+      customer_name: $customer_name
+      vehicle_number: $vehicle_number
+      driver_number: $driver_number
+      passenger_number: $passenger_number
+      kilometer_number: $kilometer_number
+      hour_number: $hour_number
+      day_number: $day_number
+      pickupAddress: $pickupAddress
+      pickupCity: $pickupCity
+      driver_name: $driver_name
+      status: $status
+    ) {
+      id
     }
   }
 `;

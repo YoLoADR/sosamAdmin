@@ -31,14 +31,18 @@ const USER_QUERY = gql`
   }
 `;
 
-// const POST_USER = gql`
-//   mutation PostUser( $url: String! $description: String!) {
-//     postUser ( url: String! description: String!){
-//       url
-//       description
-//     }
-//   }
-// `;
+const POST_USER = gql`
+  mutation PostUser($name: String!, $email: String!, $password: String!) {
+    postUser(
+      name: $name
+      email: $email
+      password: $password
+      description: $description
+    ) {
+      id
+    }
+  }
+`;
 
 export default function Users() {
   const [data, setData] = useState([]);
@@ -123,38 +127,46 @@ export default function Users() {
         if (error) return <div>Error</div>;
 
         const users = data.getUsers.users;
-        return (
-          <MaterialTable
-            title="All Users"
-            columns={columns}
-            data={users}
-            // *********************** TEST PART
-            editable={{
-              onRowAdd: newData =>
-                new Promise(resolve => {
-                  setTimeout(() => {
-                    resolve();
-                    //const tblData = data;
-                    //tblData.push(newData);
-                    console.log("newData", newData);
-                    //dispatch(editUser(removeExtraKeys(tblData), "Add"));
-                  }, 600);
-                }),
 
-              onRowUpdate: (newData, oldData) =>
-                new Promise(resolve => {
-                  setTimeout(() => {
-                    resolve();
-                    console.log("newData", newData);
-                    console.log("oldData", oldData);
-                    //const tblData = data;
-                    //tblData[tblData.indexOf(oldData)] = newData;
-                    //dispatch(editUser(removeExtraKeys(tblData), "Update"));
-                  }, 600);
-                })
-              // *********************** END TEST PART
-            }}
-          />
+        console.log("data", users);
+        const showObj = Object.keys(users).map(function(key) {
+          return <td className="whiteSpaceNoWrap">{users[key]}</td>;
+        });
+        return (
+          <div>
+            <showObj />
+            <MaterialTable
+              title="All Users"
+              columns={columns}
+              data={users}
+              // *********************** TEST PART
+              editable={{
+                onRowAdd: newData =>
+                  new Promise(resolve => {
+                    setTimeout(() => {
+                      resolve();
+                      //const tblData = data;
+                      //tblData.push(newData);
+                      console.log("newData", newData);
+                      //dispatch(editUser(removeExtraKeys(tblData), "Add"));
+                    }, 600);
+                  }),
+
+                onRowUpdate: (newData, oldData) =>
+                  new Promise(resolve => {
+                    setTimeout(() => {
+                      resolve();
+                      console.log("newData", newData);
+                      console.log("oldData", oldData);
+                      //const tblData = data;
+                      //tblData[tblData.indexOf(oldData)] = newData;
+                      //dispatch(editUser(removeExtraKeys(tblData), "Update"));
+                    }, 600);
+                  })
+                // *********************** END TEST PART
+              }}
+            />
+          </div>
         );
       }}
     </Query>
