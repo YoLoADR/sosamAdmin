@@ -9,7 +9,7 @@ import { fetchBonus } from "../actions/referralactions";
 
 function AuthLoading(props) {
     const dispatch = useDispatch();
-    const auth = useSelector(state => state.auth);
+    const auth = useSelector(state => state.auth);    
     useEffect(()=>{
         if(auth.info){
             dispatch(fetchUsers());

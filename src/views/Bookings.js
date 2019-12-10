@@ -2,13 +2,15 @@ import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import MaterialTable from "material-table";
 import CircularLoading from "../components/CircularLoading";
-//import { useSelector,useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { Query } from "react-apollo";
 import gql from "graphql-tag";
 import { AUTH_TOKEN } from "../config/dev"; // (4)
 import { Mutation } from "react-apollo";
 import { useApolloClient, useMutation } from "@apollo/react-hooks";
+import { UPDATE_BOOKING } from "../schema/bookingSchema";
+import { UPDATE_BOOKING_RECORD, UPDATE_BOOKING_RECORD_SUCCESS, UPDATE_BOOKING_RECORD_FAILURE } from "../actions/types";
+import { fetchBookings } from "../actions/bookingactions";
 
 /*
 import {
@@ -85,7 +87,8 @@ export default function Bookings() {
   ];
 
   const [data, setData] = useState([]);
-  const bookingdata = useSelector(state => state.bookingdata);
+  const bookingData = useSelector(state => state.bookingdata);
+
 
   const history = useHistory();
   const _confirm = async data => {
@@ -101,10 +104,10 @@ export default function Bookings() {
   //const dispatch = useDispatch();
 
   useEffect(() => {
-    if (bookingdata.bookings) {
-      setData(bookingdata.bookings);
+    if (bookingData.bookings) {
+      setData(bookingData.bookings);
     }
-  }, [bookingdata.bookings]);
+  }, [bookingData.bookings]);
 
   /*
   const removeExtraKeys = (tblData) =>{
@@ -117,6 +120,30 @@ export default function Bookings() {
     }
     return obj;
   }*/
+
+  // Update Booking Record
+  const [updateBooking] = useMutation(UPDATE_BOOKING)
+  const dispatch = useDispatch();
+
+  const updateBookingRecord = async (input) => {
+    dispatch({
+      type: UPDATE_BOOKING_RECORD,
+    });
+    const res = await updateBooking({ variables: input })
+
+    if (res && res.data) {
+      dispatch({
+        type: UPDATE_BOOKING_RECORD_SUCCESS,
+        payload: res.data.updateBooking
+      });
+      dispatch(fetchBookings())
+    } else {
+      dispatch({
+        type: UPDATE_BOOKING_RECORD_FAILURE,
+        payload: "error"
+      });
+    }
+  }
 
   return (
     <Query query={BOOKING_QUERY}>
@@ -134,22 +161,17 @@ export default function Bookings() {
               // *********************** TEST PART
               onRowAdd: newData =>
                 new Promise(resolve => {
-                  setTimeout(() => {}, 600);
+                  setTimeout(() => { }, 600);
                 }),
 
-              onRowUpdate: (newData, oldData) => {
-                let carType = newData.carType;
-                let customer_name = newData.customer_name;
-                return (
-                  <Mutation
-                    mutation={POST_BOOKING}
-                    variables={{ carType, customer_name }}
-                    onCompleted={data => _confirm(data)}
-                  >
-                    {mutation => _confirm()}
-                  </Mutation>
-                );
-              }
+              onRowUpdate: (newData, oldData) =>
+                new Promise((resolve, reject) => {
+                  setTimeout(() => {
+
+                    updateBookingRecord(newData)
+                    resolve()
+                  }, 1000);
+                }),
               // *********************** END TEST PART
             }}
           />
