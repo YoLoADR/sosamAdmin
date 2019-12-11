@@ -50,8 +50,12 @@ export default (state = INITIAL_STATE, action) => {
       };
 
     case UPDATE_BOOKING_RECORD_SUCCESS:
+      let { bookings } = state
+      const index = bookings.findIndex(item => item.id === action.payload.id)
+      
       return {
         ...state,
+        bookings: bookings.splice(index, 1, action.payload),
         loading: false,
       };
 
